@@ -10,6 +10,12 @@ variable "ebs_size" {
   description = "Size of EBS volume"
 }
 
+variable "ebs_type" {
+  type        = number
+  default     = 8
+  description = "Type of EBS volume"
+}
+
 variable "ebs_tags" {
   type        = map(string)
   default     = {

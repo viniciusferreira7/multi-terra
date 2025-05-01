@@ -16,7 +16,9 @@ resource "aws_kms_alias" "ebs_key_alias" {
 resource "aws_ebs_volume" "ebs" {
   availability_zone = "us-east-1"
   size              = var.ebs_size
+  type              = var.ebs_type
   encrypted = true
+  kms_key_id = aws_kms_key.ebs_key.arn
 
   tags = var.ebs_tags
 
