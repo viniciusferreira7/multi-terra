@@ -6,6 +6,9 @@ variable "ebs_size" {
 
 variable "ebs_tags" {
   type        = map(string)
-  default     = {}
-  description = "S3 tags"
+  default     = {
+    Name = "${var.project_name}-${terraform.workspace}"
+    Iac = true
+  }
+  description = "EBS tags"
 }

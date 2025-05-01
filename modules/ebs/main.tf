@@ -1,9 +1,17 @@
-// Follow the trail: https://chatgpt.com/c/6810b33e-b5d4-8009-84b8-a3d488ca7b9a
+
+resource "aws_kms_key" "ebs_key" {
+  description = "Key KMS of EBS volume"
+  enable_key_rotation = 10
+}
 
 resource "aws_ebs_volume" "ebs" {
   availability_zone = "us-east-1"
   size              = var.ebs_size
-  # encrypted = true //TODO: Think about this point
+  encrypted = true
 
-  tags = var.s3_tags
+  tags = var.ebs_tags
+
+   depends_on = [
+    aws_kms_key.s3_bucket
+  ]
 }
