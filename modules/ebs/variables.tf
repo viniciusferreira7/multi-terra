@@ -1,3 +1,9 @@
+variable "ebs_name" {
+  type        = string
+  default     = "${terraform.workspace}"
+  description = "Name of EBS volume"
+}
+
 variable "ebs_size" {
   type        = number
   default     = 8
