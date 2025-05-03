@@ -25,6 +25,13 @@ variable "ebs_tags" {
   description = "EBS tags"
 }
 
+variable "ec2_id" {
+  type        = string
+  default     = ""
+  description = "ID of EC2"
+}
+
+
 //TODO: criar IAM
 //TODO: criar um backend para salvar o estado
 // Follow the trail about Secure EBS module: https://chatgpt.com/c/6810b33e-b5d4-8009-84b8-a3d488ca7b9a
