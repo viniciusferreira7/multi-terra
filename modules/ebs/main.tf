@@ -26,3 +26,13 @@ resource "aws_ebs_volume" "ebs" {
     aws_kms_key.ebs_key
   ]
 }
+
+resource "aws_volume_attachment" "ebs_att" {
+  device_name = "/dev/sdh"
+  volume_id   = aws_ebs_volume.ebs.id
+  instance_id = var.ec2.id
+
+   depends_on = [
+    aws_ebs_volume.ebs
+  ]
+}
