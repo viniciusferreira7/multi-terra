@@ -1,22 +1,22 @@
-variable "ebs_name" {
+variable "name" {
   type        = string
   default     = "${terraform.workspace}"
   description = "Name of EBS volume"
 }
 
-variable "ebs_size" {
+variable "size" {
   type        = number
   default     = 8
   description = "Size of EBS volume"
 }
 
-variable "ebs_type" {
+variable "type" {
   type        = number
   default     = 8
   description = "Type of EBS volume"
 }
 
-variable "ebs_tags" {
+variable "tags" {
   type        = map(string)
   default     = {
     Name = "${var.project_name}-${terraform.workspace}"
