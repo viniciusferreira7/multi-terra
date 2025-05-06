@@ -1,5 +1,5 @@
 
-output "EC2_id" {
+output "ec2_id" {
   value       = data.ec2.id
   sensitive   = true
   description = "ID of EC2"
