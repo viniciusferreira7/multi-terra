@@ -15,6 +15,3 @@ resource "aws_instance" "ec2_instance" {
 
   tags = var.tags
 }
-
-//TODO: Learn more about os fields of EC2 resource
-//TODO: Add IAM
