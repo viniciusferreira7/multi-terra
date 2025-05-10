@@ -1,3 +1,5 @@
+# ⚠️ WIP
+
 # 🚀 Challenge: Multi-Environment Infrastructure Setup
 
 This repository contains the infrastructure-as-code (IaC) project developed to meet the challenge of creating a multi-environment setup using **Terraform** and **AWS**, applying best practices in organization, modularization, and security.
@@ -207,4 +209,131 @@ This module is provided as-is without warranty. Use at your own risk.
 
 ---
 
-Se quiser, posso incluir os blocos de `outputs.tf` também — deseja que eu adicione isso?
+## VPC Module
+
+This Terraform module provisions a Virtual Private Cloud (VPC) with essential networking resources including a public subnet, Internet Gateway, route table, and a security group for SSH access. It is designed to be reusable and environment-agnostic with a focus on modularity and security.
+
+### Features
+
+* Creates a custom VPC with specified CIDR block
+* Provisions a public subnet with optional public IP assignment
+* Attaches an Internet Gateway for public access
+* Creates a route table with default route to the Internet
+* Associates the route table to the subnet
+* Configures a security group for SSH access
+* Applies consistent tagging for all resources
+
+### Module Structure
+
+```
+modules/
+└── vpc/
+    ├── datasources.tf
+    ├── main.tf
+    ├── variables.tf
+    └── outputs.tf
+```
+
+### Usage
+
+Example usage in your root `main.tf`:
+
+```hcl
+module "vpc" {
+  source                           = "./modules/vpc"
+  vpc_cidr_block                   = "10.0.0.0/16"
+  vpc_tags                         = {
+                                       Name = "main-vpc"
+                                       Env  = "dev"
+                                     }
+
+  subnet_cidr_block               = "10.0.1.0/24"
+  subnet_availability_zone       = "us-west-2a"
+  subnet_map_public_ip_on_launch = true
+  subnet_tags                    = {
+                                     Name = "public-subnet"
+                                     Env  = "dev"
+                                   }
+
+  gateway_tags                   = {
+                                     Name = "igw"
+                                     Env  = "dev"
+                                   }
+
+  route_cidr_block               = "0.0.0.0/0"
+  route_tags                     = {
+                                     Name = "public-route"
+                                     Env  = "dev"
+                                   }
+
+  ssh_name                       = "allow-ssh"
+  ssh_description                = "Allow SSH access"
+  ssh_ingress_rules             = [
+                                     {
+                                       from_port   = 22
+                                       to_port     = 22
+                                       protocol    = "tcp"
+                                       cidr_blocks = ["0.0.0.0/0"]
+                                     }
+                                   ]
+  egress_rules                  = [
+                                     {
+                                       from_port   = 0
+                                       to_port     = 0
+                                       protocol    = "-1"
+                                       cidr_blocks = ["0.0.0.0/0"]
+                                     }
+                                   ]
+  ssh_tags                       = {
+                                     Name = "ssh-sg"
+                                     Env  = "dev"
+                                   }
+}
+```
+
+### Input Variables
+
+| Name                             | Description                                                | Type         | Default |
+| -------------------------------- | ---------------------------------------------------------- | ------------ | ------- |
+| `vpc_cidr_block`                 | CIDR block for the VPC                                     | string       | n/a     |
+| `vpc_tags`                       | Tags to apply to the VPC                                   | map(string)  | n/a     |
+| `subnet_cidr_block`              | CIDR block for the public subnet                           | string       | n/a     |
+| `subnet_availability_zone`       | Availability zone for the subnet                           | string       | n/a     |
+| `subnet_map_public_ip_on_launch` | Whether to assign public IPs on instance launch            | bool         | n/a     |
+| `subnet_tags`                    | Tags to apply to the subnet                                | map(string)  | n/a     |
+| `gateway_tags`                   | Tags to apply to the Internet Gateway                      | map(string)  | n/a     |
+| `route_cidr_block`               | Destination CIDR block for the route (usually `0.0.0.0/0`) | string       | n/a     |
+| `route_tags`                     | Tags to apply to the route table                           | map(string)  | n/a     |
+| `ssh_name`                       | Name of the security group                                 | string       | n/a     |
+| `ssh_description`                | Description of the security group                          | string       | n/a     |
+| `ssh_ingress_rules`              | Ingress rules for the security group                       | list(object) | n/a     |
+| `egress_rules`                   | Egress rules for the security group                        | list(object) | n/a     |
+| `ssh_tags`                       | Tags to apply to the security group                        | map(string)  | n/a     |
+
+### Security Best Practices Implemented
+
+* **Network Segmentation**: VPC and subnetting allow fine-grained traffic control.
+* **Internet Access Control**: Explicit use of route table and Internet Gateway.
+* **SSH Access Restriction**: Only allows SSH from specified CIDRs.
+* **Least Privilege**: No open access beyond what is defined in ingress/egress rules.
+* **Tagging**: All resources are consistently tagged for traceability and governance.
+
+### Outputs
+
+You can reference these outputs in your root module:
+
+| Output Name          | Description                  |
+| -------------------- | ---------------------------- |
+| `vpc_id`             | ID of the created VPC        |
+| `subnet_id`          | ID of the public subnet      |
+| `security_group_ids` | ID of the SSH security group |
+
+### License
+
+This module is provided as-is without warranty. Use at your own risk.
+
+---
+
+**Note**: Always review and restrict security group CIDR blocks. Avoid `0.0.0.0/0` in production unless strictly necessary.
+
+---
