@@ -53,3 +53,36 @@ resource "aws_route_table_association" "route" {
     aws_route_table.public
   ]
 }
+
+resource "aws_security_group" "ssh" {
+  name = var.ssh_name
+  description = var.ssh_description
+  vpc_id = aws_vpc.main.id
+
+  dynamic "ingress" {
+    for_each = var.ssh_ingress_rules
+    content {
+      from_port   = ingress.value.from_port
+      to_port     = ingress.value.to_port
+      protocol    = ingress.value.protocol
+      cidr_blocks = ingress.value.cidr_blocks
+    }
+  }
+
+  
+  dynamic "egress" {
+    for_each = var.egress_rules
+    content {
+      from_port   = egress.value.from_port
+      to_port     = egress.value.to_port
+      protocol    = egress.value.protocol
+      cidr_blocks = egress.value.cidr_blocks
+    }
+  }
+
+  tags = var.ssh_tags
+
+  depends_on = [
+    aws_vpc.main,
+   ]
+}
