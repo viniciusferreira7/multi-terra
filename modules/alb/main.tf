@@ -1,3 +1,29 @@
+resource "aws_lb_target_group" "tg" {
+  name     = var.target_group_name
+  port     = var.target_group_port
+  protocol = var.target_group_protocol
+  vpc_id   = var.vpc_id
+
+  health_check {
+    path                = var.health_check_path
+    interval            = var.health_check_interval
+    timeout             = var.health_check_timeout
+    healthy_threshold   = var.healthy_threshold
+    unhealthy_threshold = var.unhealthy_threshold
+    matcher             = var.health_check_matcher
+  }
+}
+
+resource "aws_lb_target_group_attachment" "attachment" {
+  target_group_arn = aws_lb_target_group.tg.arn
+  target_id        = var.target_id
+  port             = var.attachment_port
+
+  depends_on = [
+    aws_lb_target_group
+  ]
+}
+
 resource "aws_lb" "alb" {
   name               = var.alb_name
   internal           = var.alb_internal
