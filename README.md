@@ -337,3 +337,99 @@ This module is provided as-is without warranty. Use at your own risk.
 **Note**: Always review and restrict security group CIDR blocks. Avoid `0.0.0.0/0` in production unless strictly necessary.
 
 ---
+
+## ALB Module
+
+This Terraform module provisions an **Application Load Balancer (ALB)** with a target group and optional listeners. It supports health checks, customizable ports and protocols, and is designed to be reused across multiple environments.
+
+### Features
+
+* Provisions a Load Balancer with support for HTTP(S) protocols
+* Creates a target group with custom health check configuration
+* Allows listener and listener rule setup
+* Accepts environment-specific tagging
+* Works with any VPC and subnet configuration
+
+### Module Structure
+
+```
+modules/
+└── alb/
+    ├── main.tf
+    ├── variables.tf
+    └── outputs.tf
+```
+
+### Usage
+
+Example usage in your root `main.tf`:
+
+```hcl
+module "alb" {
+  source                 = "./modules/alb"
+  alb_name               = "myapp-alb"
+  internal               = false
+  load_balancer_type     = "application"
+  security_groups        = ["sg-0123456789abcdef0"]
+  subnets                = ["subnet-123", "subnet-456"]
+  target_group_name      = "myapp-tg"
+  target_group_port      = 80
+  target_group_protocol  = "HTTP"
+  vpc_id                 = "vpc-0123456789abcdef0"
+  health_check_path      = "/health"
+  health_check_interval  = 30
+  health_check_timeout   = 5
+  healthy_threshold      = 2
+  unhealthy_threshold    = 2
+  health_check_matcher   = "200-299"
+  tags                   = {
+                             Name = "alb-dev"
+                             Env  = "dev"
+                             Iac  = true
+                           }
+}
+```
+
+### Input Variables
+
+| Name                    | Description                                            | Type         | Default         |
+| ----------------------- | ------------------------------------------------------ | ------------ | --------------- |
+| `alb_name`              | Name of the ALB                                        | string       | n/a             |
+| `internal`              | Whether the ALB is internal or internet-facing         | bool         | `false`         |
+| `load_balancer_type`    | Type of load balancer (e.g., "application")            | string       | `"application"` |
+| `security_groups`       | List of security group IDs to associate with the ALB   | list(string) | n/a             |
+| `subnets`               | List of subnet IDs where the ALB will be placed        | list(string) | n/a             |
+| `target_group_name`     | Name of the target group                               | string       | n/a             |
+| `target_group_port`     | Port for the target group                              | number       | n/a             |
+| `target_group_protocol` | Protocol for the target group (e.g., "HTTP")           | string       | `"HTTP"`        |
+| `vpc_id`                | VPC ID for the target group                            | string       | n/a             |
+| `health_check_path`     | Path used by health check                              | string       | `"/"`           |
+| `health_check_interval` | Time between health checks (in seconds)                | number       | `30`            |
+| `health_check_timeout`  | Health check timeout (in seconds)                      | number       | `5`             |
+| `healthy_threshold`     | Number of successful checks before considering healthy | number       | `2`             |
+| `unhealthy_threshold`   | Number of failed checks before considering unhealthy   | number       | `2`             |
+| `health_check_matcher`  | HTTP status codes to match for success                 | string       | `"200"`         |
+| `tags`                  | Tags to apply to all resources                         | map(string)  | `{}`            |
+
+### Security Best Practices Implemented
+
+* **Scoped Subnet Association**: Load balancer is tied to specific subnets for better control
+* **Health Check Monitoring**: Helps detect instance issues automatically
+* **Custom Security Groups**: Allow fine-grained traffic control
+* **Environment Tags**: Useful for governance, billing, and resource filtering
+
+### Outputs
+
+| Output Name        | Description                      |
+| ------------------ | -------------------------------- |
+| `alb_arn`          | ARN of the created Load Balancer |
+| `alb_dns_name`     | DNS name of the ALB              |
+| `target_group_arn` | ARN of the target group          |
+
+### License
+
+This module is provided as-is without warranty. Use at your own risk.
+
+---
+
+**Note**: Ensure that appropriate listener and listener rule resources are added if you're not handling those in another module.

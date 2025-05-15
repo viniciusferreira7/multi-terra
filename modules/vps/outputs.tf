@@ -22,6 +22,3 @@ output "security_group_alb_sg_id" {
   sensitive   = true
   description = ""
 }
-
-//TODO: adicionar o load balance
-//TODO: adicionar o backend
