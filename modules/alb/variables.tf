@@ -97,7 +97,7 @@ variable "alb_security_group_ids" {
 variable "tags" {
   type        = map(string)
   default     = {
-    Name = "${var.alb_name}-${terraform.workspace}"
+    Name = "${var.alb_name}"
     Iac = true
   }
   description = "ALB tags"

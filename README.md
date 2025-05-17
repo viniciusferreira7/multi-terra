@@ -12,7 +12,7 @@ The goal is to implement a cloud infrastructure with three separate environments
 
 - `dev` (development)
 - `staging` (pre-production)
-- `prod` (production)
+- `production`
 
 Each environment must have isolated resources, specific configurations, and share reusable infrastructure modules.
 

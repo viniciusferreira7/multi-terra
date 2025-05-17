@@ -1,6 +1,6 @@
 variable "name" {
   type        = string
-  default     = "${terraform.workspace}"
+  default     = ""
   description = "Name of EBS volume"
 }
 
@@ -19,7 +19,7 @@ variable "type" {
 variable "tags" {
   type        = map(string)
   default     = {
-    Name = "${var.project_name}-${terraform.workspace}"
+    Name = "${var.project_name}"
     Iac = true
   }
   description = "EBS tags"
