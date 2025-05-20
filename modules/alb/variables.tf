@@ -97,7 +97,7 @@ variable "alb_security_group_ids" {
 variable "tags" {
   type        = map(string)
   default     = {
-    Name = "${var.alb_name}"
+    Name = "alb"
     Iac = true
   }
   description = "ALB tags"

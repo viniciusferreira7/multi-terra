@@ -19,7 +19,7 @@ variable "type" {
 variable "tags" {
   type        = map(string)
   default     = {
-    Name = "${var.project_name}"
+    Name = "ebs"
     Iac = true
   }
   description = "EBS tags"
@@ -29,4 +29,10 @@ variable "ec2_id" {
   type        = string
   default     = ""
   description = "ID of EC2"
+}
+
+variable "availability_zone" {
+  type        = string
+  default     = ""
+  description = "Availability Zone of EBS"
 }

@@ -14,7 +14,7 @@ resource "aws_kms_alias" "ebs_key_alias" {
 }
 
 resource "aws_ebs_volume" "ebs" {
-  availability_zone = "us-east-1"
+  availability_zone = var.availability_zone
   size              = var.size
   type              = var.type
   encrypted = true
