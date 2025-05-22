@@ -199,7 +199,7 @@ You can extend the module to expose useful attributes like:
 
 | Output Name   | Description                        |
 | ------------- | ---------------------------------- |
-| `ec2_id`   | ID of ECS  |
+| `id`   | ID of ECS  |
 
 ### License
 
