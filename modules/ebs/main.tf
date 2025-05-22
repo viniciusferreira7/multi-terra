@@ -1,7 +1,7 @@
 
 resource "aws_kms_key" "ebs_key" {
   description = "Key KMS of EBS volume"
-  enable_key_rotation = 10
+  enable_key_rotation = var.enable_key_rotation
 }
 
 resource "aws_kms_alias" "ebs_key_alias" {

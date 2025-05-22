@@ -149,6 +149,7 @@ module "ec2" {
   instance_type                 = "t3.micro"
   key_name                      = "my-key"
   subnet_id                     = "subnet-0123456789abcdef0"
+  enable_key_rotation            = true
   security_group_ids            = ["sg-0123456789abcdef0"]
   associate_public_ip_address   = true
   iam_instance_profile          = "ec2-s3-role"
@@ -175,6 +176,7 @@ module "ec2" {
 | `instance_type`               | EC2 instance type (e.g., t3.micro)           | string       | `"t2.micro"` |
 | `key_name`                    | Name of the SSH key pair                     | string       | n/a          |
 | `subnet_id`                   | ID of the subnet to launch the instance into | string       | n/a          |
+| `enable_key_rotation`         | Enable key rotation                          | bool         |  n/a          |
 | `security_group_ids`          | List of security group IDs                   | list(string) | n/a          |
 | `associate_public_ip_address` | Whether to associate a public IP             | bool         | `true`       |
 | `iam_instance_profile`        | IAM instance profile name                    | string       | `null`       |
@@ -368,10 +370,11 @@ Example usage in your root `main.tf`:
 module "alb" {
   source                 = "./modules/alb"
   alb_name               = "myapp-alb"
-  internal               = false
-  load_balancer_type     = "application"
-  security_groups        = ["sg-0123456789abcdef0"]
-  subnets                = ["subnet-123", "subnet-456"]
+  alb_internal           = false
+  alb_type               = "application"
+  alb_security_group_ids = ["sg-0123456789abcdef0"]
+  alb_subnet_ids         = ["subnet-123", "subnet-456"]
+  target_id              = ec2-id
   target_group_name      = "myapp-tg"
   target_group_port      = 80
   target_group_protocol  = "HTTP"
@@ -395,10 +398,11 @@ module "alb" {
 | Name                    | Description                                            | Type         | Default         |
 | ----------------------- | ------------------------------------------------------ | ------------ | --------------- |
 | `alb_name`              | Name of the ALB                                        | string       | n/a             |
-| `internal`              | Whether the ALB is internal or internet-facing         | bool         | `false`         |
-| `load_balancer_type`    | Type of load balancer (e.g., "application")            | string       | `"application"` |
-| `security_groups`       | List of security group IDs to associate with the ALB   | list(string) | n/a             |
-| `subnets`               | List of subnet IDs where the ALB will be placed        | list(string) | n/a             |
+| `alb_internal`              | Whether the ALB is internal or internet-facing         | bool         | `false`         |
+| `alb_type`    | Type of load balancer (e.g., "application")            | string       | `"application"` |
+| `alb_security_group_ids`       | List of security group IDs to associate with the ALB   | list(string) | n/a             |
+| `alb_subnet_ids`               | List of subnet IDs where the ALB will be placed        | list(string) | n/a             |
+| `target_id`     | ID aws instance                               | string       | n/a             |
 | `target_group_name`     | Name of the target group                               | string       | n/a             |
 | `target_group_port`     | Port for the target group                              | number       | n/a             |
 | `target_group_protocol` | Protocol for the target group (e.g., "HTTP")           | string       | `"HTTP"`        |

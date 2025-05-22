@@ -20,7 +20,7 @@ resource "aws_lb_target_group_attachment" "attachment" {
   port             = var.attachment_port
 
   depends_on = [
-    aws_lb_target_group
+    aws_lb_target_group.tg
   ]
 }
 

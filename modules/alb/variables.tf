@@ -1,73 +1,72 @@
 variable "target_group_name" {
-  description = "Nome do target group"
+  description = "Target group name"
   type        = string
   default     = "ec2-tg"
 }
 
 variable "target_group_port" {
-  description = "Porta do target group"
+  description = "Target group port"
   type        = number
   default     = 80
 }
 
 variable "target_group_protocol" {
-  description = "Protocolo do target group"
+  description = "Target group protocol"
   type        = string
   default     = "HTTP"
 }
 
 variable "vpc_id" {
-  description = "ID da VPC"
+  description = "VPC ID"
   type        = string
 }
 
 variable "health_check_path" {
-  description = "Caminho do health check"
+  description = "Health check path"
   type        = string
   default     = "/"
 }
 
 variable "health_check_interval" {
-  description = "Intervalo do health check"
+  description = "Health check interval"
   type        = number
   default     = 30
 }
 
 variable "health_check_timeout" {
-  description = "Timeout do health check"
+  description = "Health check timeout"
   type        = number
   default     = 5
 }
 
 variable "healthy_threshold" {
-  description = "Limite de verificações bem-sucedidas"
+  description = "Number of successful checks before considering the target healthy"
   type        = number
   default     = 2
 }
 
 variable "unhealthy_threshold" {
-  description = "Limite de falhas antes de marcar como unhealthy"
+  description = "Number of failed checks before considering the target unhealthy"
   type        = number
   default     = 2
 }
 
 variable "health_check_matcher" {
-  description = "Código de resposta esperado"
+  description = "Expected response code"
   type        = string
   default     = "200"
 }
 
 variable "target_id" {
-  description = "ID da instância alvo"
+  description = "Target instance ID"
   type        = string
 }
 
 variable "attachment_port" {
-  description = "Porta usada pela instância"
+  description = "Port used by the target instance"
   type        = number
   default     = 80
 }
-
 
 variable "alb_name" {
   default     = "ec2-alb"
@@ -100,7 +99,7 @@ variable "tags" {
     Name = "alb"
     Iac = true
   }
-  description = "ALB tags"
+  description = "Tags to apply to the ALB"
 }
 
 variable "alb_listener_port" {

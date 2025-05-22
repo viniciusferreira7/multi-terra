@@ -15,7 +15,7 @@ data "aws_subnet" "public" {
 }
 
 
-data "aws_security_group" "ssh"  {
+data "aws_security_group" "alb_sg"  {
   id = aws_security_group.ssh.id
 
   depends_on = [

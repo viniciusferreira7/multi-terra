@@ -36,3 +36,9 @@ variable "availability_zone" {
   default     = ""
   description = "Availability Zone of EBS"
 }
+
+variable "enable_key_rotation" {
+  type        = string
+  default     = ""
+  description = "Enable rotation of key"
+}

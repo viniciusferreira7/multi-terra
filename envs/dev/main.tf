@@ -77,11 +77,13 @@ module "ec2" {
 }
 
 module "ebs" {
-  source            = "../../modules/ebs"
-  name              = "ebs_instance"
-  availability_zone = "us-east-1"
-  size              = "20"
-  ec2_id            = module.ec2.id
+  source              = "../../modules/ebs"
+  name                = "ebs_instance"
+  availability_zone   = "us-east-1"
+  size                = "20"
+  ec2_id              = module.ec2.id
+  enable_key_rotation = true
+
   tags = {
     Name = "ebs_instance-dev"
     Env  = "dev"
@@ -93,38 +95,31 @@ module "ebs" {
   ]
 }
 
-//FIXME: terraform validate
-# ╷
-# │ Error: Unsupported argument
-# │
-# │   on main.tf line 82, in module "ebs":
-# │   82:   availability_zone = "us-east-1"
-# │
-# │ An argument named "availability_zone" is not expected here.
-
 module "alb" {
-  source                = "../../modules/alb"
-  alb_name              = "my-app-alb"
-  internal              = false
-  load_balancer_type    = "application"
-  security_groups       = [module.vpc.security_group_ids]
-  subnets               = [module.vpc.subnet_id]
-  target_group_name     = "myapp-tg"
-  target_group_port     = 80
-  target_group_protocol = "HTTP"
-  vpc_id                = module.vpc.vpc_id
-  health_check_path     = "/health"
-  health_check_interval = 30
-  health_check_timeout  = 5
-  healthy_threshold     = 2
-  unhealthy_threshold   = 2
-  health_check_matcher  = "200-299"
+  source                 = "../../modules/alb"
+  alb_name               = "my-app-alb"
+  alb_internal           = false
+  alb_type               = "application"
+  alb_security_group_ids = [module.vpc.security_group_ids]
+  alb_subnet_ids         = [module.vpc.subnet_id]
+  target_id              = module.ec2.id
+  target_group_name      = "myapp-tg"
+  target_group_port      = 80
+  target_group_protocol  = "HTTP"
+  vpc_id                 = module.vpc.vpc_id
+  health_check_path      = "/health"
+  health_check_interval  = 30
+  health_check_timeout   = 5
+  healthy_threshold      = 2
+  unhealthy_threshold    = 2
+  health_check_matcher   = "200-299"
   tags = {
     Name = "alb-dev"
     Env  = "dev"
     Iac  = true
   }
   depends_on = [
-    module.vpc
+    module.vpc,
+    module.ec2
   ]
 }

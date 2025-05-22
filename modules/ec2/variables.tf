@@ -1,3 +1,9 @@
+variable "ami_id" {
+  description = "ID of AMI"
+  type        = string
+  default     = "ami-0123456789abcdef0"
+}
+
 variable "instance_type" {
   description = "EC2 instance type"
   type        = string
