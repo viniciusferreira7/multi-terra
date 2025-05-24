@@ -5,6 +5,7 @@ terraform {
       version = "~> 5.0"
     }
   }
+
   backend "s3" {
     bucket  = "multi-terra-staging-state-bucket-tf"
     region  = "us-east-1"
@@ -16,7 +17,7 @@ terraform {
 }
 
 provider "aws" {
- region  = "us-east-1"
+  region  = "us-east-1"
   profile = var.profile
 }
 
