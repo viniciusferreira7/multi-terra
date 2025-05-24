@@ -1,4 +1,7 @@
-# ⚠️ WIP
+
+> ⚠️ When running Terraform commands, it will attempt to access the S3 backend for the selected environment. However, the S3 bucket may not exist yet, so the backend initialization might fail until the infrastructure is created manually or via a bootstrap process.
+
+---
 
 # 🚀 Challenge: Multi-Environment Infrastructure Setup
 
